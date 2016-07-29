@@ -6,7 +6,7 @@
 
 THIS FORK:
 
-    change config to support multiple lines text value quote by back quote(`)
+    change config to support multiple lines text values which be quoted by back quote(`)
 
 beego is used for rapid development of RESTful APIs, web apps and backend services in Go.
 It is inspired by Tornado, Sinatra and Flask. beego has some Go-specific features such as interfaces and struct embedding.
