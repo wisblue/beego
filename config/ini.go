@@ -156,7 +156,11 @@ func (ini *IniConfig) parseFile(name string) (*IniConfigContainer, error) {
 		}
 
 		if len(keyValue) != 2 {
-			return nil, errors.New("read the content error: \"" + string(line) + "\", should key = val")
+			if string(line) == "" {
+				continue
+			} else {
+				return nil, errors.New("read the content error: \"" + string(line) + "\", should key = val")
+			}
 		}
 		val := bytes.TrimSpace(keyValue[1])
 		if bytes.HasPrefix(val, bMultiLineQuote) {
@@ -170,7 +174,9 @@ func (ini *IniConfig) parseFile(name string) (*IniConfigContainer, error) {
 					if err == io.EOF {
 						break
 					}
-					if bytes.HasSuffix(line, bMultiLineQuote) {
+					newline := bytes.TrimSpace(line)
+					
+					if bytes.HasSuffix(newline, bMultiLineQuote) {
 						val = append(val, bytes.TrimSuffix(line, bMultiLineQuote)...)
 						val = append(val, '\n')
 						break
