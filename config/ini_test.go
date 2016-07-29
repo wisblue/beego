@@ -47,7 +47,10 @@ key1="asta"
 key2 = "xie"
 CaseInsensitive = true
 peers = one;two;three
-`
+mline =` + " `" + ` line1
+line2
+line3` + "`" + `
+hello = world`
 
 		keyValue = map[string]interface{}{
 			"appname":               "beeapi",
@@ -122,6 +125,15 @@ peers = one;two;three
 	if iniconf.String("name") != "astaxie" {
 		t.Fatal("get name error")
 	}
+	if iniconf.String("demo::mline") != ` line1
+line2
+line3
+` {
+		fmt.Println()
+		t.Fatal("get mline error:`" + iniconf.String("demo::mline") + "`")
+	}
+
+	
 
 }
 

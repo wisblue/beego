@@ -39,6 +39,7 @@ var (
 	sectionStart   = []byte{'['} // section start signal
 	sectionEnd     = []byte{']'} // section end signal
 	lineBreak      = "\n"
+	bMultiLineQuote= []byte{'`'} // multiple line text value 
 )
 
 // IniConfig implements Config to parse ini file.
@@ -158,7 +159,28 @@ func (ini *IniConfig) parseFile(name string) (*IniConfigContainer, error) {
 			return nil, errors.New("read the content error: \"" + string(line) + "\", should key = val")
 		}
 		val := bytes.TrimSpace(keyValue[1])
-		if bytes.HasPrefix(val, bDQuote) {
+		if bytes.HasPrefix(val, bMultiLineQuote) {
+			val = bytes.TrimLeft(val, "`")
+			if bytes.HasSuffix(val, bMultiLineQuote) {
+				val = bytes.TrimRight(val, "`")
+			} else {
+				val = append(val, '\n')
+				for {
+					line, _, err := buf.ReadLine()
+					if err == io.EOF {
+						break
+					}
+					if bytes.HasSuffix(line, bMultiLineQuote) {
+						val = append(val, bytes.TrimSuffix(line, bMultiLineQuote)...)
+						val = append(val, '\n')
+						break
+					} else {
+						val = append(val, line...)
+						val = append(val, '\n')
+					}
+				}
+			}
+		} else if bytes.HasPrefix(val, bDQuote) {
 			val = bytes.Trim(val, `"`)
 		}
 
