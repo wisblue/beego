@@ -78,8 +78,10 @@ func (ini *IniConfig) parseFile(name string) (*IniConfigContainer, error) {
 		}
 	}
 	section := defaultSection
+	line_counter := 0
 	for {
 		line, _, err := buf.ReadLine()
+		line_counter++
 		if err == io.EOF {
 			break
 		}
@@ -159,11 +161,12 @@ func (ini *IniConfig) parseFile(name string) (*IniConfigContainer, error) {
 			if string(line) == "" {
 				continue
 			} else {
-				return nil, errors.New("read the content error: \"" + string(line) + "\", should key = val")
+				return nil, errors.New("line:" + strconv.Itoa(line_counter) + ": read the content error: \"" + string(line) + "\", should key = val")
 			}
 		}
 		val := bytes.TrimSpace(keyValue[1])
 		if bytes.HasPrefix(val, bMultiLineQuote) {
+			val = bytes.TrimSpace(val)
 			val = bytes.TrimLeft(val, "`")
 			if bytes.HasSuffix(val, bMultiLineQuote) {
 				val = bytes.TrimRight(val, "`")
@@ -177,8 +180,7 @@ func (ini *IniConfig) parseFile(name string) (*IniConfigContainer, error) {
 					newline := bytes.TrimSpace(line)
 					
 					if bytes.HasSuffix(newline, bMultiLineQuote) {
-						val = append(val, bytes.TrimSuffix(line, bMultiLineQuote)...)
-						val = append(val, '\n')
+						val = append(val, bytes.TrimSuffix(newline, bMultiLineQuote)...)
 						break
 					} else {
 						val = append(val, line...)

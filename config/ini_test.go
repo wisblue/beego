@@ -50,6 +50,10 @@ peers = one;two;three
 mline =` + " `" + ` line1
 line2
 line3` + "`" + `
+mline2 =` + " `" + ` line1
+line2
+line3
+` + "` " + `
 hello = world`
 
 		keyValue = map[string]interface{}{
@@ -125,12 +129,18 @@ hello = world`
 	if iniconf.String("name") != "astaxie" {
 		t.Fatal("get name error")
 	}
-	if iniconf.String("demo::mline") != ` line1
-line2
-line3
-` {
-		fmt.Println()
-		t.Fatal("get mline error:`" + iniconf.String("demo::mline") + "`")
+	mline:= iniconf.String("demo::mline")
+	mline = strings.TrimSpace(mline)
+	mline = strings.Replace(mline, "\n", " ", -1)
+	if mline != `line1 line2 line3` {
+		t.Fatal("get mline error:[" + iniconf.String("demo::mline") + "]")
+	}
+	mline = strings.TrimSpace(iniconf.String("demo::mline2"))
+	mline = strings.TrimSpace(mline)
+	mline = strings.Replace(mline, "\n", " ", -1)
+	
+	if  mline != `line1 line2 line3` {
+		t.Fatal("get mline error:[" + strings.TrimSpace(iniconf.String("demo::mline2")) + "]")
 	}
 
 	
