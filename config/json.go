@@ -228,6 +228,9 @@ func (c *JSONConfigContainer) DIY(key string) (v interface{}, err error) {
 	return nil, errors.New("not exist key")
 }
 
+func (c *JSONConfigContainer) SectionNames() []string {
+	return nil // not imlemented
+}
 // section.key or key
 func (c *JSONConfigContainer) getData(key string) interface{} {
 	if len(key) == 0 {

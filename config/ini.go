@@ -222,7 +222,17 @@ type IniConfigContainer struct {
 	keyComment     map[string]string            // id: []{comment, key...}; id 1 is for main comment.
 	sync.RWMutex
 }
+// Return section names
+func (c *IniConfigContainer) SectionNames() [] string {
+	keys := make([]string, len(c.data))
 
+	i := 0
+	for k := range c.data {
+	    keys[i] = k
+	    i++
+	}
+	return keys
+}
 // Bool returns the boolean value for a given key.
 func (c *IniConfigContainer) Bool(key string) (bool, error) {
 	return ParseBool(c.getdata(key))

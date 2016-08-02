@@ -64,6 +64,7 @@ type Configer interface {
 	DIY(key string) (interface{}, error)
 	GetSection(section string) (map[string]string, error)
 	SaveConfigFile(filename string) error
+	SectionNames() []string
 }
 
 // Config is the adapter interface for parsing config file to get raw data to Configer.

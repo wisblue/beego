@@ -143,8 +143,9 @@ hello = world`
 		t.Fatal("get mline error:[" + strings.TrimSpace(iniconf.String("demo::mline2")) + "]")
 	}
 
-	
-
+	if len(iniconf.SectionNames()) != 2 {
+		t.Fatal("get section names error")
+	}
 }
 
 func TestIniSave(t *testing.T) {
@@ -204,3 +205,5 @@ name=mysql
 
 	}
 }
+
+
